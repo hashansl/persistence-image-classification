@@ -3,6 +3,9 @@ Contains functionality for creating PyTorch DataLoaders for
 image classification data.
 """
 import os
+import torch
+import numpy as np
+import data_loader
 
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
@@ -12,8 +15,8 @@ from torch.utils.data import DataLoader
 NUM_WORKERS =0
 
 def create_dataloaders(
-    train_dir: str, 
-    test_dir: str, 
+    annotation_file_path: str, 
+    root_dir: str, 
     transform: transforms.Compose, 
     batch_size: int, 
     num_workers: int=NUM_WORKERS
@@ -41,23 +44,42 @@ def create_dataloaders(
                              batch_size=32,
                              num_workers=4)
   """
-  # Use ImageFolder to create dataset(s)
-  train_data = datasets.ImageFolder(train_dir, transform=transform)
-  test_data = datasets.ImageFolder(test_dir, transform=transform)
+
+  #---
+  data_set = data_loader.data_loader_persistence_img(annotation_file_path=annotation_file_path, root_dir=root_dir, transform=transform)
+
+  #---
+  # Set the random seed
+  torch.manual_seed(42)
+  np.random.seed(42)
+
+  #---
+  train_set, test_set = torch.utils.data.random_split(data_set, [70, 25])
+
+
+  #---
+  # train_data = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
+  # test_data = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=False)
+
+
+
+  # # Use ImageFolder to create dataset(s)
+  # train_data = datasets.ImageFolder(train_dir, transform=transform)
+  # test_data = datasets.ImageFolder(test_dir, transform=transform)
 
   # Get class names
-  class_names = train_data.classes
+  class_names = data_set.get_class_names()
 
   # Turn images into data loaders
   train_dataloader = DataLoader(
-      train_data,
+      train_set,
       batch_size=batch_size,
       shuffle=True,
       num_workers=num_workers,
       pin_memory=True,
   )
   test_dataloader = DataLoader(
-      test_data,
+      test_set,
       batch_size=batch_size,
       shuffle=False, # don't need to shuffle test data
       num_workers=num_workers,
