@@ -27,7 +27,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Create transforms
 data_transform = transforms.Compose([
-  # transforms.Resize((64, 64)),
+  transforms.Resize((64, 64)),
   transforms.ToTensor()
 ])
 
