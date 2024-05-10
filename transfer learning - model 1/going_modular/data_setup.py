@@ -54,7 +54,7 @@ def create_dataloaders(
   np.random.seed(42)
 
   #---
-  train_set, test_set = torch.utils.data.random_split(data_set, [70, 25])
+  train_set, test_set = torch.utils.data.random_split(data_set, [60, 35])
 
 
   #---
