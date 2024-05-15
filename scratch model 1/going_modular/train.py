@@ -70,6 +70,6 @@ print(f"Total training time: {end_time-start_time:.3f} seconds")
 loss_and_accuracy_curve_plotter.plot_loss_curves(results)
 
 # Save the model with help from utils.py
-utils.save_model(model=model,
-                 target_dir="/Users/h6x/ORNL/git/persistence-image-classification/scratch model 1/models",
-                 model_name="05_going_modular_script_mode_tinyvgg_model.pth")
+# utils.save_model(model=model,
+#                  target_dir="/Users/h6x/ORNL/git/persistence-image-classification/scratch model 1/models",
+#                  model_name="05_going_modular_script_mode_tinyvgg_model.pth")

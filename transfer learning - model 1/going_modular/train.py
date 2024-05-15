@@ -29,10 +29,10 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 # NEW: Setup the model with pretrained weights and send it to the target device (torchvision v0.13+)
-# weights = torchvision.models.EfficientNet_B0_Weights.DEFAULT # .DEFAULT = best available weights 
-# model = torchvision.models.efficientnet_b0(weights=weights).to(device)
-weights = torchvision.models.MobileNet_V2_Weights.DEFAULT # .DEFAULT = best available weights 
-model = torchvision.models.mobilenet_v2(weights=weights).to(device)
+weights = torchvision.models.EfficientNet_B0_Weights.DEFAULT # .DEFAULT = best available weights 
+model = torchvision.models.efficientnet_b0(weights=weights).to(device)
+# weights = torchvision.models.MobileNet_V2_Weights.DEFAULT # .DEFAULT = best available weights 
+# model = torchvision.models.mobilenet_v2(weights=weights).to(device)
 
 
 # # Freeze all base layers in the "features" section of the model (the feature extractor) by setting requires_grad=False
