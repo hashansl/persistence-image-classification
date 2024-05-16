@@ -11,10 +11,10 @@ from torchvision import transforms
 from timeit import default_timer as timer 
 
 # Setup hyperparameters
-NUM_EPOCHS = 10
+NUM_EPOCHS = 50
 BATCH_SIZE = 16
 HIDDEN_UNITS = 40
-LEARNING_RATE = 0.0000001
+LEARNING_RATE = 0.001
 
 
 #going modular/data/pizza_steak_sushi/train
@@ -32,7 +32,7 @@ data_transform = transforms.Compose([
 ])
 
 # Create DataLoaders with help from data_setup.py
-train_dataloader, test_dataloader, class_names = data_setup.create_dataloaders(
+train_dataloader, validation_dataloader, test_dataloader, class_names = data_setup.create_dataloaders(
     annotation_file_path=annotation_file_path,
     root_dir=root_dir,
     transform=data_transform,
