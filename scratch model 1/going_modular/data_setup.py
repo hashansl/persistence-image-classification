@@ -55,7 +55,7 @@ def create_dataloaders(
 
   #---
   total_size = len(data_set)
-  train_size = int(0.7 * total_size)
+  train_size = int(0.75 * total_size)
   val_size = int(0.15 * total_size)
   test_size = total_size - train_size - val_size
 
@@ -85,7 +85,7 @@ def create_dataloaders(
   )
 
   validation_dataloader = DataLoader(
-      test_set,
+      val_set,
       batch_size=batch_size,
       shuffle=False, # don't need to shuffle ???
       num_workers=num_workers,

@@ -11,10 +11,10 @@ from torchvision import transforms
 from timeit import default_timer as timer 
 
 # Setup hyperparameters
-NUM_EPOCHS = 50
-BATCH_SIZE = 16
+NUM_EPOCHS = 100
+BATCH_SIZE = 8
 HIDDEN_UNITS = 40
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.00001
 
 
 #going modular/data/pizza_steak_sushi/train
@@ -56,11 +56,12 @@ start_time = timer()
 # Start training with help from engine.py
 results = engine.train(model=model,
              train_dataloader=train_dataloader,
-             test_dataloader=test_dataloader,
+             validation_dataloader=validation_dataloader,
              loss_fn=loss_fn,
              optimizer=optimizer,
              epochs=NUM_EPOCHS,
-             device=device)
+             device=device,
+             use_mixed_precision=True)
 
 # End the timer and print out how long it took
 end_time = timer()
