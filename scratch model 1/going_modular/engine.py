@@ -3,6 +3,7 @@ Contains functions for training and validationing a PyTorch model.
 """
 import torch
 import numpy as np
+import pickle
 
 
 from tqdm.auto import tqdm
@@ -110,7 +111,7 @@ def validation_step(model: torch.nn.Module,
 
   # Setup validation loss and validation accuracy values
   validation_loss, validation_acc = 0, 0
-  best_loss = np.inf
+  
 
   # Turn on inference context manager
   with torch.inference_mode(): # similalr to torch.no_grad()
@@ -137,27 +138,16 @@ def validation_step(model: torch.nn.Module,
   return validation_loss, validation_acc
 
 
-def stop_metrics(loss: float, patience: int, best_loss: float) -> bool:
-  """Stops training if the loss doesn't improve after patience epochs.
-
-  Args:
-    loss: The current loss value.
-    patience: The number of epochs to wait for the loss to improve.
-    best_loss: The best loss value.
-
-  Returns:
-    A boolean indicating whether to stop training or not.
-  """
-  if loss < best_loss:
-    best_loss = loss
-    patience = 0
-  else:
-    patience += 1
-
-  if patience >= 5:
-    print("Stopping early!")
-    return True
-  return False
+# def predict(model: torch.nn.Module, dataloader: torch.utils.data.DataLoader, device: torch.device) -> List:
+#     """Make predictions using a trained model."""
+#     model.eval()
+#     predictions = []
+#     with torch.inference_mode():
+#         for X in dataloader:
+#             X = X.to(device)
+#             y_pred = model(X)
+#             predictions.extend(y_pred.cpu().numpy())
+#     return predictions
 
 
 def train(model: torch.nn.Module, 
@@ -167,7 +157,9 @@ def train(model: torch.nn.Module,
           loss_fn: torch.nn.Module,
           epochs: int,
           device: torch.device,
-          use_mixed_precision:False) -> Dict[str, List]:
+          use_mixed_precision:False,
+          save_name:str,
+          save_path) -> Dict[str, List]:
   """Trains and validations a PyTorch model.
 
   Passes a target PyTorch models through train_step() and validation_step()
@@ -206,6 +198,12 @@ def train(model: torch.nn.Module,
       "validation_acc": []
   }
 
+  # Initialize patience counter
+  patience_ctr = 0
+
+  # Initialize best loss to infinity
+  best_loss = np.inf
+
   # Loop through training and validationing steps for a number of epochs
   for epoch in tqdm(range(epochs)):
       train_loss, train_acc = train_step(model=model,
@@ -236,14 +234,51 @@ def train(model: torch.nn.Module,
       results["validation_acc"].append(validation_acc)
 
       # Check for the best validation loss
-      if epoch == 0:
+      if epoch == 1:
           best_loss = validation_loss
+
+          # saving the model(only the weights) for the first time
+          # This 
+          torch.save({
+                 "epoch": epoch,
+                  "model_state_dict": model.state_dict(),
+                  "optimizer_state_dict": optimizer.state_dict(),
+                  "validation_loss": best_loss,
+              },(save_path+save_name))
+          print("Model saved!")
       else:
           if validation_loss < best_loss:
               best_loss = validation_loss
-              torch.save(model.state_dict(), "best_model.pth")
+              torch.save({
+                 "epoch": epoch,
+                  "model_state_dict": model.state_dict(),
+                  "optimizer_state_dict": optimizer.state_dict(),
+                  "validation_loss": best_loss,
+              },(save_path+save_name))
               print("Model saved!")
+              patience_ctr = 0  # Reset patience counter if the model improves
+          else:
+              patience_ctr += 1
+              if patience_ctr >= 5:
+                  print(f"Stopping criterion reached: validation loss has not improved in {patience_ctr} epochs")
+                  print(f"saving to {save_path+save_name}", flush=True)
 
+                  # loading weights of best model
+                  checkpoint = torch.load(save_path+save_name)
+                  model.load_state_dict(checkpoint["model_state_dict"])
+
+                  with open(save_path+str(best_loss), "wb") as f_out:
+                    pickle.dump(results, f_out, pickle.HIGHEST_PROTOCOL)
+                  break
+  if epoch+1 == epochs:
+    print("Model training hit max epochs, not converged")
+
+    #loading weights of best model
+    checkpoint = torch.load(save_path+save_name)
+    model.load_state_dict(checkpoint["model_state_dict"])
+    print(f"saving to {save_path+save_name}", flush=True)
+    with open(save_path+str(best_loss), "wb") as f_out:
+      pickle.dump(results, f_out, pickle.HIGHEST_PROTOCOL)
 
   # Return the filled results at the end of the epochs
   return results

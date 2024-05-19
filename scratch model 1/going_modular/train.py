@@ -12,9 +12,9 @@ from timeit import default_timer as timer
 
 # Setup hyperparameters
 NUM_EPOCHS = 100
-BATCH_SIZE = 8
+BATCH_SIZE = 32
 HIDDEN_UNITS = 40
-LEARNING_RATE = 0.00001
+LEARNING_RATE = 0.001
 
 
 #going modular/data/pizza_steak_sushi/train
@@ -61,7 +61,9 @@ results = engine.train(model=model,
              optimizer=optimizer,
              epochs=NUM_EPOCHS,
              device=device,
-             use_mixed_precision=True)
+             use_mixed_precision=True,
+             save_name="tinyvgg_model.pth",
+             save_path="/Users/h6x/ORNL/git/persistence-image-classification/scratch model 1/models/")
 
 # End the timer and print out how long it took
 end_time = timer()
