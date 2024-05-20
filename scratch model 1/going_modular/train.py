@@ -4,16 +4,16 @@ Trains a PyTorch image classification model using device-agnostic code.
 
 import os
 import torch
-import data_setup, engine, model_builder, utils,loss_and_accuracy_curve_plotter
+import data_setup, engine, model_builder, utils,loss_and_accuracy_curve_plotter,testing
 
 
 from torchvision import transforms
 from timeit import default_timer as timer 
 
 # Setup hyperparameters
-NUM_EPOCHS = 100
-BATCH_SIZE = 32
-HIDDEN_UNITS = 40
+NUM_EPOCHS = 50
+BATCH_SIZE = 8
+HIDDEN_UNITS = 20
 LEARNING_RATE = 0.001
 
 
@@ -72,7 +72,20 @@ print(f"Total training time: {end_time-start_time:.3f} seconds")
 #plotting the results
 loss_and_accuracy_curve_plotter.plot_loss_curves(results)
 
-# Save the model with help from utils.py
-# utils.save_model(model=model,
-#                  target_dir="/Users/h6x/ORNL/git/persistence-image-classification/scratch model 1/models",
-#                  model_name="05_going_modular_script_mode_tinyvgg_model.pth")
+# Test the model after training
+test_loss, test_acc = testing.test_step(model=model,
+                                  dataloader=test_dataloader,
+                                  loss_fn=loss_fn,
+                                  device=device,
+                                  use_mixed_precision=True)
+
+# Print out test results
+print(
+    f"Test results | "
+    f"test_loss: {test_loss:.4f} | "
+    f"test_acc: {test_acc:.4f}"
+)
+
+# Update results dictionary with test results
+results["test_loss"].append(test_loss)
+results["test_acc"].append(test_acc)
