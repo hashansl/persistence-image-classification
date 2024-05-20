@@ -238,7 +238,7 @@ def train(model: torch.nn.Module,
           best_loss = validation_loss
 
           # saving the model(only the weights) for the first time
-          # This 
+          # This can be deleted if you don't want to save the model for the first time
           torch.save({
                  "epoch": epoch,
                   "model_state_dict": model.state_dict(),
