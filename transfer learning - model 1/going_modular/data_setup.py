@@ -54,7 +54,14 @@ def create_dataloaders(
   np.random.seed(42)
 
   #---
-  train_set, test_set = torch.utils.data.random_split(data_set, [60, 35])
+  total_size = len(data_set)
+  train_size = int(0.75 * total_size)
+  val_size = int(0.15 * total_size)
+  test_size = total_size - train_size - val_size
+
+  #---
+  train_set, val_set, test_set = torch.utils.data.random_split(data_set, [train_size, val_size, test_size])
+
 
 
   #---
@@ -78,6 +85,15 @@ def create_dataloaders(
       num_workers=num_workers,
       pin_memory=True,
   )
+
+  validation_dataloader = DataLoader(
+      val_set,
+      batch_size=batch_size,
+      shuffle=False, # don't need to shuffle ???
+      num_workers=num_workers,
+      pin_memory=True,
+  )
+
   test_dataloader = DataLoader(
       test_set,
       batch_size=batch_size,
@@ -86,4 +102,4 @@ def create_dataloaders(
       pin_memory=True,
   )
 
-  return train_dataloader, test_dataloader, class_names
+  return train_dataloader, validation_dataloader, test_dataloader, class_names
