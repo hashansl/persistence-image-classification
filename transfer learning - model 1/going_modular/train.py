@@ -132,6 +132,6 @@ print(
     f"test_acc: {test_acc:.4f}"
 )
 
-# Update results dictionary with test results
-results["test_loss"].append(test_loss)
-results["test_acc"].append(test_acc)
+# # Update results dictionary with test results
+# results["test_loss"].append(test_loss)
+# results["test_acc"].append(test_acc)
