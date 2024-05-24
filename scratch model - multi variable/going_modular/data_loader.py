@@ -17,35 +17,24 @@ from torchvision.transforms import ToPILImage
 class data_loader_persistence_img(Dataset):
 
     def __init__(self,annotation_file_path,root_dir,transform=None):
-        self.annotations = gpd.read_file(annotation_file_path)
-        self.root_dir = root_dir
-        self.transform = transform
-        self.class_names = sorted(self.annotations['percentile'].unique())
-        self.to_pil = ToPILImage()  # Initialize ToPILImage transform
+        pass
 
     def __len__(self):
-        return len(self.annotations)
+        pass
 
     def __getitem__(self,index):
-        npy_file_path = os.path.join(self.root_dir, self.annotations.iloc[index,4] + '.npy')
+        pass
 
-        img = np.load(npy_file_path)
-        img = self.to_pil(img)
-
-        y_label = torch.tensor(int(self.annotations.iloc[index]['percentile']))
-
-        if self.transform:
-            img = self.transform(img)
-        return (img, y_label)
-    
     def get_class_names(self):
-        return self.class_names
+        pass
 
 
 
 
+root_dir = "/Users/h6x/ORNL/git/persistence-image-classification/data/tennessee/2018/percentiles/below 90/h1/npy 3 channels"
+annotation_file_path = "/Users/h6x/ORNL/git/persistence-image-classification/data/tennessee/2018/SVI2018 TN counties with death rate HepVu/SVI2018_TN_counties_with_death_rate_HepVu.shp"
 
-# dataset = data_loader_persistence_img(annotation_file_path='/Users/h6x/ORNL/git/persistence-image-classification/scratch model 1/data/data/tennessee/2018/SVI2018 TN counties with death rate HepVu/SVI2018_TN_counties_with_death_rate_HepVu.shp',root_dir='/Users/h6x/ORNL/git/persistence-image-classification/scratch model 1/data/data/tennessee/2018/percentiles/H0H1-3 channels',transform=transforms.ToTensor())
+# dataset = data_loader_persistence_img(annotation_file_path=,root_dir=,transform=transforms.ToTensor())
 
 # print(len(dataset))
 
