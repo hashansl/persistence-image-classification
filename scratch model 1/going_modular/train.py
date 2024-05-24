@@ -11,7 +11,7 @@ from torchvision import transforms
 from timeit import default_timer as timer 
 
 # Setup hyperparameters
-NUM_EPOCHS = 50
+NUM_EPOCHS = 10
 BATCH_SIZE = 8
 HIDDEN_UNITS = 20
 LEARNING_RATE = 0.001
@@ -86,6 +86,6 @@ print(
     f"test_acc: {test_acc:.4f}"
 )
 
-# Update results dictionary with test results
-results["test_loss"].append(test_loss)
-results["test_acc"].append(test_acc)
+# # Update results dictionary with test results
+# results["test_loss"].append(test_loss)
+# results["test_acc"].append(test_acc)

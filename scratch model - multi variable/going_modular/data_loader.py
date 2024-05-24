@@ -32,7 +32,7 @@ class data_loader_persistence_img(Dataset):
 
 
 root_dir = "/Users/h6x/ORNL/git/persistence-image-classification/data/tennessee/2018/percentiles/below 90/h1/npy 3 channels"
-annotation_file_path = "/Users/h6x/ORNL/git/persistence-image-classification/data/tennessee/2018/SVI2018 TN counties with death rate HepVu/SVI2018_TN_counties_with_death_rate_HepVu.shp"
+annotation_file_path = "/Users/h6x/ORNL/git/persistence-image-classification/data/SVI - census tract level/SVI 2018 with HepVu census tracts/SVI2018_US_census_with_opioid_indicators.shp"
 
 # dataset = data_loader_persistence_img(annotation_file_path=,root_dir=,transform=transforms.ToTensor())
 
