@@ -24,6 +24,7 @@ LEARNING_RATE = 0.0001
 root_dir = "/Users/h6x/ORNL/git/persistence-image-classification/data/tennessee/2018/percentiles/below 90/h1/npy 3 channels"
 annotation_file_path = "/Users/h6x/ORNL/git/persistence-image-classification/data/tennessee/2018/SVI2018 TN counties with death rate HepVu/SVI2018_TN_counties_with_death_rate_HepVu.shp"
 
+
 # Setup target device
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
